@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Интерактивные карточки: Информатика</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(to bottom right, #cceeff, #ffffff);
+      padding: 20px;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.3s, background-color 0.3s;
+      min-height: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+      background-color: #f0f8ff;
+    }
+
+    .highlight-card {
+      background-color: #ffcc99;  /* выделение для if и for */
+      border: 2px solid #ff7f50;
+    }
+
+    .card img {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 10px;
+    }
+
+    pre {
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin-top: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Интерактивные карточки: Информатика</h1>
+  <div class="cards" id="cards"></div>
+
+  <script>
+    const flashcards = [
+      {
+        term: "Алгоритм",
+        definition: "Последовательность шагов для решения задачи.",
+        image: "https://img.icons8.com/color/96/flow-chart.png"
+      },
+      {
+        term: "Бит",
+        definition: "Наименьшая единица информации (0 или 1).",
+        image: "https://img.icons8.com/fluency/96/000000/1-circle.png"
+      },
+      {
+        term: "Байт",
+        definition: "8 бит.",
+        image: "https://img.icons8.com/fluency/96/database.png"
+      },
+      {
+        term: "Процессор",
+        definition: "Устройство, выполняющее команды программ.",
+        image: "https://img.icons8.com/fluency/96/chip.png"
+      },
+      {
+        term: "Оперативная память",
+        definition: "Хранит данные и программы во время работы компьютера.",
+        image: "https://img.icons8.com/color/96/ram.png"
+      },
+      {
+        term: "Файл",
+        definition: "Именованная область хранения данных на диске.",
+        image: "https://img.icons8.com/color/96/document.png"
+      },
+      {
+        term: "Интернет",
+        definition: "Глобальная сеть, объединяющая миллионы компьютеров.",
+        image: "https://img.icons8.com/color/96/internet--v1.png"
+      },
+      {
+        term: "IP-адрес",
+        definition: "Уникальный адрес устройства в сети Интернет.",
+        image: "https://img.icons8.com/color/96/ip-address.png"
+      },
+      {
+        term: "Программа",
+        definition: "Набор команд, выполняемых компьютером.",
+        image: "https://img.icons8.com/color/96/source-code.png"
+      },
+      {
+        term: "Операционная система",
+        definition: "Программа, управляющая работой компьютера.",
+        image: "https://img.icons8.com/color/96/windows-client.png"
+      },
+      {
+        term: "Условие if",
+        definition: `if (x > 0) {\n    System.out.println("Положительное");\n}\n\nПример 2: \nif (y == 10) {\n    System.out.println("y равно 10");\n}`,
+        isCode: true,
+        isHighlight: true
+      },
+      {
+        term: "Цикл for",
+        definition: `for (int i = 0; i < 5; i++) {\n    System.out.println(i);\n}\n\nПример 2: \nfor (int j = 10; j > 0; j--) {\n    System.out.println(j);\n}`,
+        isCode: true,
+        isHighlight: true
+      }
+    ];
+
+    const cardsContainer = document.getElementById('cards');
+
+    flashcards.forEach((card) => {
+      const div = document.createElement('div');
+      div.className = 'card';
+
+      // Если карточка выделенная, добавляем класс для фона
+      if (card.isHighlight) {
+        div.classList.add('highlight-card');
+      }
+
+      // Создаем блок с текстом
+      const text = document.createElement('div');
+      text.textContent = card.term;
+
+      // Если есть изображение, создаем картинку
+      if (card.image) {
+        const img = document.createElement('img');
+        img.src = card.image;
+        img.alt = card.term;
+        div.appendChild(img);
+      }
+
+      div.appendChild(text);
+
+      // Добавляем обработчик клика для отображения определения или кода
+      div.addEventListener('click', () => {
+        if (text.textContent === card.term) {
+          if (card.isCode) {
+            text.textContent = '';
+            const pre = document.createElement('pre');
+            pre.textContent = card.definition;
+            div.appendChild(pre);
+          } else {
+            text.textContent = card.definition;
+          }
+        } else {
+          text.textContent = card.term;
+          const pre = div.querySelector('pre');
+          if (pre) div.removeChild(pre);
+        }
+      });
+
+      cardsContainer.appendChild(div);
+    });
+  </script>
+</body>
+</html>
